@@ -19,13 +19,17 @@ import { Dimension, DimensionUnit } from '../entities/dimension.entity';
 
 const dataSource = new DataSource({
   type: 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432', 10),
-  username: process.env.DB_USERNAME || 'postgres',
-  password: process.env.DB_PASSWORD || 'postgres',
-  database: process.env.DB_DATABASE || 'carpet_platform',
+  ...(process.env.DATABASE_URL
+    ? { url: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } }
+    : {
+        host: process.env.DB_HOST || 'localhost',
+        port: parseInt(process.env.DB_PORT || '5432', 10),
+        username: process.env.DB_USERNAME || 'postgres',
+        password: process.env.DB_PASSWORD || 'postgres',
+        database: process.env.DB_DATABASE || 'carpet_platform',
+      }),
   entities: [__dirname + '/../entities/*.entity{.ts,.js}'],
-  synchronize: true, // create tables if they don't exist (dev only)
+  synchronize: true,
 });
 
 async function runSeed() {
