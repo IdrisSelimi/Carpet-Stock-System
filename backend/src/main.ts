@@ -27,6 +27,10 @@ async function bootstrap() {
     },
     credentials: true,
   });
+  // Keep-alive ping endpoint (bypasses global prefix and JWT guard)
+  const httpAdapter = app.getHttpAdapter();
+  httpAdapter.get('/ping', (_req: unknown, res: { send: (s: string) => void }) => res.send('pong'));
+
   const port = process.env.PORT || 3000;
   await app.listen(port);
   console.log(`Application is running on: http://localhost:${port}/api`);
