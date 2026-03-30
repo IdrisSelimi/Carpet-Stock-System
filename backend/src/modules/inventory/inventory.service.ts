@@ -121,6 +121,9 @@ export class InventoryService {
       .createQueryBuilder('t')
       .leftJoinAndSelect('t.performedBy', 'u')
       .leftJoinAndSelect('t.variant', 'v')
+      .leftJoinAndSelect('v.product', 'p')
+      .leftJoinAndSelect('v.color', 'c')
+      .leftJoinAndSelect('v.dimension', 'd')
       .leftJoinAndSelect('t.store', 's')
       .orderBy('t.createdAt', 'DESC')
       .take(filters.limit ?? 50);
