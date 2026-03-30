@@ -11,6 +11,7 @@ import Stores from './pages/Stores';
 import Categories from './pages/Categories';
 import Users from './pages/Users';
 import Transfers from './pages/Transfers';
+import Sales from './pages/Sales';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -41,6 +42,7 @@ export default function App() {
           <Route path="categories" element={<Categories />} />
           <Route path="users" element={<Users />} />
           <Route path="transfers" element={<Transfers />} />
+          <Route path="sales" element={<Sales />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

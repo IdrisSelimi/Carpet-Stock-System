@@ -11,6 +11,7 @@ import {
   UserOutlined,
   LogoutOutlined,
   SwapOutlined,
+  DollarOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../contexts/AuthContext';
 import { useStoreContext } from '../contexts/StoreContext';
@@ -25,6 +26,7 @@ const allMenuItems = [
   { key: '/inventory', icon: <InboxOutlined />, label: 'Залиха' },
   { key: '/reports', icon: <BarChartOutlined />, label: 'Извештаи' },
   { key: '/stores', icon: <ShopOutlined />, label: 'Продавници', managerOnly: true },
+  { key: '/sales', icon: <DollarOutlined />, label: 'Продажби' },
   { key: '/transfers', icon: <SwapOutlined />, label: 'Трансфери' },
   { key: '/categories', icon: <FolderOutlined />, label: 'Категории' },
   { key: '/users', icon: <UserOutlined />, label: 'Корисници', managerOnly: true },
