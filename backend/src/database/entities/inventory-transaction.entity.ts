@@ -44,7 +44,7 @@ export class InventoryTransaction {
   })
   transactionType: TransactionType;
 
-  @Column({ type: 'float' })
+  @Column({ type: 'float', nullable: true })
   quantity: number;
 
   @Column({ name: 'reference_id', type: 'uuid', nullable: true })
