@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Table, Input, Button, Space, Typography, Tag, Modal, Form, InputNumber, Select, message, Alert, Popconfirm } from 'antd';
 
-import { PlusOutlined, AppstoreOutlined, ShopOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, AppstoreOutlined, ShopOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import api from '../api/client';
 import { useStoreContext } from '../contexts/StoreContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -11,6 +11,7 @@ export default function Products() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Record<string, unknown> | null>(null);
   const [variantModalOpen, setVariantModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [showNewDimension, setShowNewDimension] = useState(false);
@@ -55,6 +56,20 @@ export default function Products() {
     queryFn: () => api.get(`/products/${selectedProductId}`, { params: { include: 'variants' } }).then((r) => r.data),
     enabled: !!selectedProductId && variantModalOpen,
     refetchOnMount: 'always',
+  });
+
+  const updateProduct = useMutation({
+    mutationFn: ({ id, values }: { id: string; values: Record<string, unknown> }) => api.put(`/products/${id}`, values),
+    onSuccess: () => {
+      message.success('Производот е ажуриран');
+      setModalOpen(false);
+      setEditingProduct(null);
+      form.resetFields();
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+    onError: (err: { response?: { data?: { message?: string } } }) => {
+      message.error(err.response?.data?.message || 'Не успеа да се ажурира производот');
+    },
   });
 
   const createProduct = useMutation({
@@ -133,6 +148,19 @@ export default function Products() {
     },
   });
 
+  const openEditModal = (record: Record<string, unknown>) => {
+    setEditingProduct(record);
+    form.setFieldsValue({
+      sku: record.sku,
+      name: record.name,
+      description: record.description,
+      category_id: (record.category as { id?: string })?.id ?? record.categoryId,
+      brand: record.brand,
+      material: record.material,
+    });
+    setModalOpen(true);
+  };
+
   const openVariantModal = (productId: string) => {
     setSelectedProductId(productId);
     setVariantModalOpen(true);
@@ -156,6 +184,11 @@ export default function Products() {
           <Button type="link" size="small" icon={<AppstoreOutlined />} onClick={() => openVariantModal(record.id)}>
             Варијанти
           </Button>
+          {isManager && (
+            <Button type="link" size="small" icon={<EditOutlined />} onClick={() => openEditModal(record as Record<string, unknown>)}>
+              Уреди
+            </Button>
+          )}
           {isManager && (
             <Popconfirm
               title="Избриши производ?"
@@ -211,18 +244,24 @@ export default function Products() {
       />
 
       <Modal
-        title="Додај производ"
+        title={editingProduct ? 'Уреди производ' : 'Додај производ'}
         open={modalOpen}
-        onCancel={() => { setModalOpen(false); form.resetFields(); }}
+        onCancel={() => { setModalOpen(false); setEditingProduct(null); form.resetFields(); }}
         onOk={() => form.submit()}
-        confirmLoading={createProduct.isPending}
+        confirmLoading={createProduct.isPending || updateProduct.isPending}
         destroyOnHidden
         width={520}
       >
         <Form
           form={form}
           layout="vertical"
-          onFinish={(values) => createProduct.mutate(values)}
+          onFinish={(values) => {
+            if (editingProduct) {
+              updateProduct.mutate({ id: editingProduct.id as string, values });
+            } else {
+              createProduct.mutate(values);
+            }
+          }}
         >
           <Form.Item name="sku" label="Код на производ" rules={[{ required: true }]}>
             <Input placeholder="пр. TH-001" />

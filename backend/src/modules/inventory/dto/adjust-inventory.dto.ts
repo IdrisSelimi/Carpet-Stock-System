@@ -1,8 +1,8 @@
-import { IsInt, IsOptional, IsEnum, IsUUID, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsEnum, IsUUID, IsString } from 'class-validator';
 import { TransactionType } from '../../../database/entities/inventory-transaction.entity';
 
 export class AdjustInventoryDto {
-  @IsInt()
+  @IsNumber()
   quantity_change: number;
 
   @IsOptional()

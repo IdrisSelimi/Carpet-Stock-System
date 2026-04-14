@@ -218,6 +218,14 @@ NODE_ENV=development
 
 ---
 
+## Rules
+
+> **PRODUCTION IS LIVE — never touch the production database.**
+> All development, testing, seeding, and schema changes must be done against the **dev environment only**.
+> If in doubt, check `NODE_ENV` and `DATABASE_URL` / `DB_*` vars before running any command that writes to a database.
+
+---
+
 ## Development Notes
 
 - **Adding a new page**: create `frontend/src/pages/NewPage.tsx`, add route in `App.tsx`, add nav item in `Layout.tsx`

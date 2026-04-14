@@ -68,30 +68,32 @@ export default function Inventory() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const columns: ColumnsType<any> = [
-    { title: 'Категорија', key: 'category', width: 100, render: (_: unknown, record: { variant?: { product?: { category?: { name?: string }; cat?: { name?: string } } } }) => getCategoryName(record) },
-    { title: 'Код', dataIndex: ['variant', 'product', 'sku'], key: 'code', width: 90 },
-    { title: 'Боја', dataIndex: ['variant', 'color', 'name'], key: 'color', width: 100 },
+    { title: 'Категорија', key: 'category', width: 110, render: (_: unknown, record: { variant?: { product?: { category?: { name?: string }; cat?: { name?: string } } } }) => getCategoryName(record) },
+    { title: 'Код', dataIndex: ['variant', 'product', 'sku'], key: 'code', width: 80 },
+    { title: 'Боја', dataIndex: ['variant', 'color', 'name'], key: 'color', width: 90 },
     { title: 'Димензија', dataIndex: ['variant', 'dimension', 'displayName'], key: 'dimension', width: 90, render: (v: string) => v || '—' },
-    ...(isManager && isStoreView ? [] : [{ title: 'Продавница', dataIndex: ['store', 'name'], key: 'store' }]),
-    { title: 'Достапно', dataIndex: 'quantityAvailable', key: 'available', width: 100 },
-    { title: 'Резервирано', dataIndex: 'quantityReserved', key: 'reserved', width: 100 },
-    { title: 'Ниво за нарачка', dataIndex: 'reorderLevel', key: 'reorderLevel', width: 130 },
+    ...(isManager && isStoreView ? [] : [{ title: 'Продавница', dataIndex: ['store', 'name'], key: 'store', width: 120 }]),
+    { title: 'Достапно', dataIndex: 'quantityAvailable', key: 'available', width: 90, align: 'right' as const },
+    { title: 'Резервир.', dataIndex: 'quantityReserved', key: 'reserved', width: 85, align: 'right' as const },
+    { title: 'Реorder', dataIndex: 'reorderLevel', key: 'reorderLevel', width: 75, align: 'right' as const },
     {
       title: 'Статус',
       dataIndex: 'status',
       key: 'status',
+      width: 80,
       render: (v: string) =>
         v === 'LOW_STOCK' ? <Tag color="orange">Мало</Tag> : v === 'OUT_OF_STOCK' ? <Tag color="red">Нема</Tag> : <Tag color="green">ОК</Tag>,
     },
     {
       title: 'Акции',
       key: 'actions',
-      width: 200,
+      width: 120,
+      fixed: 'right' as const,
       render: (
         _: unknown,
         record: { id: string; storeId?: string; store?: { id?: string; name?: string }; variant?: { variantSku?: string; product?: { name?: string }; color?: { name?: string } }; quantityAvailable?: number },
       ) => (
-        <Space size="small">
+        <Space size={0} wrap={false}>
           {(isManager || isOwnStore(record)) && (
             <Button
               type="link"
@@ -103,10 +105,10 @@ export default function Inventory() {
                 form.setFieldsValue({ quantity_change: 10, notes: '' });
               }}
             >
-              Додај залиха
+              Додај
             </Button>
           )}
-          {!(isManager || isOwnStore(record)) && <Typography.Text type="secondary">Само за преглед</Typography.Text>}
+          {!(isManager || isOwnStore(record)) && <Typography.Text type="secondary" style={{ fontSize: 12 }}>Преглед</Typography.Text>}
           {isManager && (
             <Popconfirm
               title="Избриши запис за залиха?"
@@ -115,7 +117,7 @@ export default function Inventory() {
               okText="Избриши"
               okButtonProps={{ danger: true }}
             >
-              <Button type="link" size="small" danger icon={<DeleteOutlined />}>Избриши</Button>
+              <Button type="link" size="small" danger icon={<DeleteOutlined />} />
             </Popconfirm>
           )}
         </Space>
@@ -125,15 +127,15 @@ export default function Inventory() {
 
   return (
     <div>
-      <Space style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
         <Typography.Title level={4} style={{ margin: 0 }}>Залиха</Typography.Title>
         <Input.Search
           placeholder="Пребарај по категорија, код, боја или продавница"
           allowClear
           onSearch={setSearch}
-          style={{ width: 320 }}
+          style={{ width: '100%', maxWidth: 360 }}
         />
-      </Space>
+      </div>
       {isStoreView && (
         <Typography.Paragraph type="secondary" style={{ marginBottom: 8 }}>
           Преглед и уредување на залиха само за избраната продавница. Префрли на &quot;Сите продавници&quot; во заглавјето за да видите сè.
@@ -144,10 +146,14 @@ export default function Inventory() {
           Можете да ги прегледувате залихите на сите продавници. &quot;Додај залиха&quot; е достапно само за вашата продавница; останатите редови се само за преглед.
         </Typography.Paragraph>
       )}
-      <Typography.Paragraph type="secondary">
-        Користете &quot;Додај залиха&quot; на ред за да додадете количина. Залихата е по продавница и по варијанта на производ.
-      </Typography.Paragraph>
-      <Table loading={isLoading} dataSource={list} columns={columns} rowKey="id" />
+      <Table
+        loading={isLoading}
+        dataSource={list}
+        columns={columns}
+        rowKey="id"
+        scroll={{ x: 900 }}
+        size="small"
+      />
 
       <Modal
         title="Додај залиха"
@@ -174,8 +180,8 @@ export default function Inventory() {
             }
           }}
         >
-          <Form.Item name="quantity_change" label="Количина за додавање" rules={[{ required: true }, { type: 'number', min: 1 }]}>
-            <InputNumber min={1} style={{ width: '100%' }} placeholder="пр. 20" />
+          <Form.Item name="quantity_change" label="Количина за додавање" rules={[{ required: true }, { type: 'number', min: 0.01 }]}>
+            <InputNumber min={0.01} step={0.1} precision={2} style={{ width: '100%' }} placeholder="пр. 13.8" />
           </Form.Item>
           <Form.Item name="notes" label="Забелешки (незадолжително)">
             <Input placeholder="пр. Пополнување од добавувач" />

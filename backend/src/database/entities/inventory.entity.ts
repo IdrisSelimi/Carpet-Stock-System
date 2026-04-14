@@ -32,16 +32,16 @@ export class Inventory {
   @JoinColumn({ name: 'store_id' })
   store: Store;
 
-  @Column({ name: 'quantity_available', default: 0 })
+  @Column({ name: 'quantity_available', type: 'float', default: 0 })
   quantityAvailable: number;
 
-  @Column({ name: 'quantity_reserved', default: 0 })
+  @Column({ name: 'quantity_reserved', type: 'float', default: 0 })
   quantityReserved: number;
 
-  @Column({ name: 'reorder_level', default: 0 })
+  @Column({ name: 'reorder_level', type: 'float', default: 0 })
   reorderLevel: number;
 
-  @Column({ name: 'reorder_quantity', default: 0 })
+  @Column({ name: 'reorder_quantity', type: 'float', default: 0 })
   reorderQuantity: number;
 
   @Column({ name: 'last_restock_date', type: 'timestamp', nullable: true })

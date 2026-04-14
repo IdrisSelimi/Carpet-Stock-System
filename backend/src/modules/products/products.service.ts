@@ -67,8 +67,8 @@ export class ProductsService {
   }
 
   async create(dto: CreateProductDto): Promise<Product> {
-    const existing = await this.productRepo.findOne({ where: { sku: dto.sku } });
-    if (existing) throw new ConflictException('Product SKU already exists');
+    const existing = await this.productRepo.findOne({ where: { sku: dto.sku, categoryId: dto.category_id } });
+    if (existing) throw new ConflictException('Product SKU already exists in this category');
     const product = this.productRepo.create({
       sku: dto.sku,
       name: dto.name,
@@ -83,10 +83,13 @@ export class ProductsService {
 
   async update(id: string, dto: UpdateProductDto): Promise<Product> {
     const product = await this.findById(id);
-    if (dto.sku && dto.sku !== product.sku) {
-      const existing = await this.productRepo.findOne({ where: { sku: dto.sku } });
-      if (existing) throw new ConflictException('Product SKU already exists');
+    const targetSku = dto.sku ?? product.sku;
+    const targetCategoryId = dto.category_id ?? product.categoryId;
+    if (targetSku !== product.sku || targetCategoryId !== product.categoryId) {
+      const existing = await this.productRepo.findOne({ where: { sku: targetSku, categoryId: targetCategoryId } });
+      if (existing && existing.id !== id) throw new ConflictException('Product SKU already exists in this category');
     }
+    if (dto.sku !== undefined) product.sku = dto.sku;
     if (dto.name !== undefined) product.name = dto.name;
     if (dto.description !== undefined) product.description = dto.description;
     if (dto.category_id !== undefined) product.categoryId = dto.category_id;
