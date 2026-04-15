@@ -41,7 +41,7 @@ export class ProductVariant {
   @JoinColumn({ name: 'dimension_id' })
   dimension: Dimension;
 
-  @Column({ name: 'variant_sku', unique: true })
+  @Column({ name: 'variant_sku' })
   variantSku: string;
 
   @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })

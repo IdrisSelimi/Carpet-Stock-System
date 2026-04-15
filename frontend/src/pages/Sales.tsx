@@ -72,10 +72,10 @@ export default function Sales() {
     id: string;
     quantityAvailable?: number;
     store?: { name?: string };
-    variant?: { product?: { sku?: string; name?: string }; color?: { name?: string }; dimension?: { displayName?: string } };
+    variant?: { product?: { sku?: string; name?: string; category?: { name?: string } }; color?: { name?: string }; dimension?: { displayName?: string } };
   }) => ({
     value: inv.id,
-    label: `${inv.variant?.product?.sku ?? '—'} · ${inv.variant?.color?.name ?? '—'} · ${inv.variant?.dimension?.displayName ?? '—'}${!isManager || !effectiveStoreId ? ` (${inv.store?.name ?? '—'})` : ''} — Достапно: ${inv.quantityAvailable}`,
+    label: `[${inv.variant?.product?.category?.name ?? '—'}] ${inv.variant?.product?.sku ?? '—'} · ${inv.variant?.color?.name ?? '—'} · ${inv.variant?.dimension?.displayName ?? '—'}${!isManager || !effectiveStoreId ? ` (${inv.store?.name ?? '—'})` : ''} — Достапно: ${inv.quantityAvailable}`,
   }));
 
   const txColumns: ColumnsType<{

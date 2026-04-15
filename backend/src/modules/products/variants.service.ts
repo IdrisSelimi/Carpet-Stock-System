@@ -122,7 +122,7 @@ export class VariantsService {
       );
     }
     const existingBySku = await this.variantRepo.findOne({
-      where: { variantSku },
+      where: { variantSku, productId },
       relations: ['color', 'dimension'],
     });
     if (existingBySku) {

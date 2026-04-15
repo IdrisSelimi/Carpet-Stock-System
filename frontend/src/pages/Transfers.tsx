@@ -51,7 +51,7 @@ export default function Transfers() {
     .filter((inv: any) => inv.quantityAvailable > 0)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .map((inv: any) => ({
-      label: `${inv.variant?.product?.sku ?? '—'} — ${inv.variant?.color?.name ?? '—'} (${inv.variant?.dimension?.displayName ?? '—'}) · Достапно: ${inv.quantityAvailable}`,
+      label: `[${inv.variant?.product?.category?.name ?? '—'}] ${inv.variant?.product?.sku ?? '—'} — ${inv.variant?.color?.name ?? '—'} (${inv.variant?.dimension?.displayName ?? '—'}) · Достапно: ${inv.quantityAvailable}`,
       value: inv.variant?.id,
     }));
 
