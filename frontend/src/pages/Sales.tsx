@@ -84,7 +84,7 @@ export default function Sales() {
     quantity: number;
     transactionType: string;
     notes?: string;
-    variant?: { product?: { sku?: string }; color?: { name?: string }; dimension?: { displayName?: string } };
+    variant?: { product?: { sku?: string; category?: { name?: string } }; color?: { name?: string }; dimension?: { displayName?: string } };
     store?: { name?: string };
     performedBy?: { firstName?: string; lastName?: string; email?: string };
   }> = [
@@ -99,7 +99,7 @@ export default function Sales() {
       title: 'Производ',
       key: 'product',
       render: (_, r) =>
-        `${r.variant?.product?.sku ?? '—'} · ${r.variant?.color?.name ?? '—'} · ${r.variant?.dimension?.displayName ?? '—'}`,
+        `[${r.variant?.product?.category?.name ?? '—'}] ${r.variant?.product?.sku ?? '—'} · ${r.variant?.color?.name ?? '—'} · ${r.variant?.dimension?.displayName ?? '—'}`,
     },
     { title: 'Продавница', dataIndex: ['store', 'name'], key: 'store', width: 120 },
     {

@@ -61,7 +61,7 @@ export default function Transfers() {
       key: 'variant',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (_: unknown, r: any) =>
-        `${r.variant?.product?.sku ?? '—'} · ${r.variant?.color?.name ?? '—'}`,
+        `[${r.variant?.product?.category?.name ?? '—'}] ${r.variant?.product?.sku ?? '—'} · ${r.variant?.color?.name ?? '—'} · ${r.variant?.dimension?.displayName ?? '—'}`,
     },
     { title: 'Од', key: 'from', dataIndex: ['fromStore', 'name'] },
     { title: 'До', key: 'to', dataIndex: ['toStore', 'name'] },
@@ -135,8 +135,8 @@ export default function Transfers() {
             />
           </Form.Item>
 
-          <Form.Item name="quantity" label="Количина" rules={[{ required: true }, { type: 'number', min: 1 }]}>
-            <InputNumber min={1} style={{ width: '100%' }} />
+          <Form.Item name="quantity" label="Количина" rules={[{ required: true }, { type: 'number', min: 0.01 }]}>
+            <InputNumber min={0.01} step={0.1} precision={2} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item name="notes" label="Забелешки (незадолжително)">

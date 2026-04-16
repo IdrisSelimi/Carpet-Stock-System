@@ -50,6 +50,9 @@ export class TransfersService {
       .leftJoinAndSelect('t.toStore', 'ts')
       .leftJoinAndSelect('t.variant', 'v')
       .leftJoinAndSelect('v.product', 'p')
+      .leftJoinAndSelect('p.category', 'cat')
+      .leftJoinAndSelect('v.color', 'c')
+      .leftJoinAndSelect('v.dimension', 'd')
       .leftJoinAndSelect('t.initiatedBy', 'u')
       .orderBy('t.initiatedAt', 'DESC');
     if (storeId) {

@@ -43,7 +43,7 @@ export class StoreTransfer {
   @JoinColumn({ name: 'variant_id' })
   variant: ProductVariant;
 
-  @Column('int')
+  @Column({ type: 'float' })
   quantity: number;
 
   @Column({

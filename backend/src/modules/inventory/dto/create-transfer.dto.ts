@@ -1,4 +1,4 @@
-import { IsUUID, IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { IsUUID, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class CreateTransferDto {
   @IsUUID()
@@ -10,8 +10,8 @@ export class CreateTransferDto {
   @IsUUID()
   variant_id: string;
 
-  @IsInt()
-  @Min(1)
+  @IsNumber()
+  @Min(0.01)
   quantity: number;
 
   @IsOptional()
