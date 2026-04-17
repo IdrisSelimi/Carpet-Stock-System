@@ -8,7 +8,6 @@ export class StoreAccessGuard implements CanActivate {
     const user = request.user;
     const requestedStoreId =
       request.params.storeId ||
-      request.params.id ||
       request.body?.store_id ||
       request.query?.store_id;
 
