@@ -8,10 +8,10 @@ export interface LoginPayload {
 export interface UserInfo {
   id: string;
   email: string;
-  first_name?: string;
+  firstName?: string;
   lastName?: string;
   role: 'MANAGER' | 'STORE_WORKER';
-  store_id: string | null;
+  storeId: string | null;
 }
 
 export const authApi = {

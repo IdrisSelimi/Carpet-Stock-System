@@ -15,7 +15,7 @@ export default function Sales() {
   const { user } = useAuth();
   const { selectedStoreId } = useStoreContext();
   const isManager = user?.role === 'MANAGER';
-  const userStoreId = (user as { storeId?: string }).storeId ?? null;
+  const userStoreId = user?.storeId ?? null;
 
   const effectiveStoreId = isManager ? (selectedStoreFilter ?? selectedStoreId ?? undefined) : (userStoreId ?? undefined);
 
@@ -195,9 +195,10 @@ export default function Sales() {
               showSearch
               placeholder="Пребарај и избери производ"
               options={inventoryOptions}
-              filterOption={(input, option) =>
-                (option?.label?.toString() ?? '').toLowerCase().includes(input.toLowerCase())
-              }
+              filterOption={(input, option) => {
+                const label = (option?.label?.toString() ?? '').toLowerCase();
+                return input.toLowerCase().trim().split(/\s+/).every((token) => label.includes(token));
+              }}
               loading={isLoading}
               notFoundContent={isLoading ? 'Вчитување...' : 'Нема достапни производи'}
             />

@@ -87,7 +87,7 @@ export default function Categories() {
       <Space style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
         <Typography.Title level={4} style={{ margin: 0 }}>Категории</Typography.Title>
         <Space>
-          <Input.Search placeholder="Пребарај по ime или слаг" allowClear onSearch={setSearch} style={{ width: 240 }} />
+          <Input.Search placeholder="Пребарај по ime или слаг" allowClear onSearch={setSearch} onChange={(e) => !e.target.value && setSearch('')} style={{ width: 240 }} />
           {isManager && (
             <Button type="primary" icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>
               Додај категорија

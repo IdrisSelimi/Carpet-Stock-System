@@ -35,7 +35,7 @@ export class ProductsService {
       tokens.forEach((token, i) => {
         const param = `tok${i}`;
         qb.andWhere(
-          `(p.name ILIKE :${param} OR p.sku ILIKE :${param} OR c.name ILIKE :${param} OR c.colorCode ILIKE :${param})`,
+          `(p.name ILIKE :${param} OR p.sku ILIKE :${param} OR c.name ILIKE :${param} OR c.colorCode ILIKE :${param} OR cat.name ILIKE :${param})`,
           { [param]: `%${token}%` },
         );
       });

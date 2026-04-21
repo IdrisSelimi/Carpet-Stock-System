@@ -16,7 +16,7 @@ export default function Inventory() {
   const { user } = useAuth();
   const { selectedStoreId, isStoreView } = useStoreContext();
   const isManager = user?.role === 'MANAGER';
-  const userStoreId = (user as { storeId?: string }).storeId ?? (user as { store_id?: string }).store_id ?? null;
+  const userStoreId = user?.storeId ?? null;
   const effectiveStoreId = isManager ? (selectedStoreId ?? undefined) : undefined;
 
   const { data, isLoading } = useQuery({
@@ -73,9 +73,9 @@ export default function Inventory() {
     { title: 'Боја', dataIndex: ['variant', 'color', 'name'], key: 'color', width: 90 },
     { title: 'Димензија', dataIndex: ['variant', 'dimension', 'displayName'], key: 'dimension', width: 90, render: (v: string) => v || '—' },
     ...(isManager && isStoreView ? [] : [{ title: 'Продавница', dataIndex: ['store', 'name'], key: 'store', width: 120 }]),
-    { title: 'Достапно', dataIndex: 'quantityAvailable', key: 'available', width: 90, align: 'right' as const },
-    { title: 'Резервир.', dataIndex: 'quantityReserved', key: 'reserved', width: 85, align: 'right' as const },
-    { title: 'Реorder', dataIndex: 'reorderLevel', key: 'reorderLevel', width: 75, align: 'right' as const },
+    { title: 'Достапно', dataIndex: 'quantityAvailable', key: 'available', width: 90, align: 'right' as const, render: (v: number) => +parseFloat(v?.toFixed(2)) },
+    { title: 'Резервир.', dataIndex: 'quantityReserved', key: 'reserved', width: 85, align: 'right' as const, render: (v: number) => +parseFloat(v?.toFixed(2)) },
+    { title: 'Реorder', dataIndex: 'reorderLevel', key: 'reorderLevel', width: 75, align: 'right' as const, render: (v: number) => +parseFloat(v?.toFixed(2)) },
     {
       title: 'Статус',
       dataIndex: 'status',

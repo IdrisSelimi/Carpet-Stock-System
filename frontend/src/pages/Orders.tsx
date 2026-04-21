@@ -37,7 +37,7 @@ export default function Orders() {
   const queryClient = useQueryClient();
 
   const isManager = user?.role === 'MANAGER';
-  const userStoreId = (user as { storeId?: string }).storeId ?? user?.store_id ?? null;
+  const userStoreId = user?.storeId ?? null;
   const { selectedStoreId, isStoreView } = useStoreContext();
   const effectiveStoreForOrder = isManager ? (isStoreView ? selectedStoreId : null) : userStoreId;
 

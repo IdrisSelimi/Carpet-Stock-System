@@ -224,7 +224,7 @@ export default function Products() {
       <Space style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
         <Typography.Title level={4} style={{ margin: 0 }}>Производи</Typography.Title>
         <Space>
-          <Input.Search placeholder="Пребарај производи" allowClear onSearch={setSearch} style={{ width: 200 }} />
+          <Input.Search placeholder="Пребарај производи" allowClear onSearch={setSearch} onChange={(e) => !e.target.value && setSearch('')} style={{ width: 200 }} />
           <Button type="primary" icon={<PlusOutlined />} onClick={() => setModalOpen(true)}>
             Додај производ
           </Button>

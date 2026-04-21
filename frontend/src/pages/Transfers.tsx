@@ -2,11 +2,17 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Typography, Form, Select, InputNumber, Input, Button, Table, Tag, message, Card } from 'antd';
 import { SwapOutlined } from '@ant-design/icons';
 import api from '../api/client';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Transfers() {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
-  const fromStoreId: string | undefined = Form.useWatch('from_store_id', form);
+  const { user } = useAuth();
+  const isManager = user?.role === 'MANAGER';
+  const userStoreId = user?.storeId ?? null;
+  const fromStoreId: string | undefined = isManager
+    ? Form.useWatch('from_store_id', form)
+    : (userStoreId ?? undefined);
 
   const { data: stores = [] } = useQuery({
     queryKey: ['stores'],
@@ -103,10 +109,11 @@ export default function Transfers() {
           onFinish={(values) => doTransfer.mutate(values)}
           initialValues={{ quantity: 1 }}
         >
-          <Form.Item name="from_store_id" label="Од продавница" rules={[{ required: true, message: 'Избери изворна продавница' }]}>
+          <Form.Item name="from_store_id" label="Од продавница" rules={[{ required: true, message: 'Избери изворна продавница' }]} initialValue={!isManager ? userStoreId : undefined}>
             <Select
               placeholder="Избери продавница"
               options={storeOptions}
+              disabled={!isManager}
               onChange={() => form.setFieldValue('variant_id', undefined)}
             />
           </Form.Item>
@@ -120,7 +127,10 @@ export default function Transfers() {
               },
             }),
           ]}>
-            <Select placeholder="Избери продавница" options={storeOptions} />
+            <Select
+              placeholder="Избери продавница"
+              options={isManager ? storeOptions : storeOptions.filter((s) => s.value !== userStoreId)}
+            />
           </Form.Item>
 
           <Form.Item name="variant_id" label="Производ (Код — Боја)" rules={[{ required: true, message: 'Избери варијанта' }]}>
@@ -130,7 +140,10 @@ export default function Transfers() {
               loading={invLoading}
               disabled={!fromStoreId}
               showSearch
-              optionFilterProp="label"
+              filterOption={(input, option) => {
+                const label = (option?.label?.toString() ?? '').toLowerCase();
+                return input.toLowerCase().trim().split(/\s+/).every((token) => label.includes(token));
+              }}
               notFoundContent={fromStoreId ? 'Нема достапна залиха во оваа продавница' : null}
             />
           </Form.Item>
