@@ -33,11 +33,8 @@ export class InventoryController {
     @Query('store_id') storeId: string,
     @Query('low_stock') lowStock: string,
     @Query('search') search: string,
-    @CurrentUser() user: User,
   ) {
-    // Workers can view all stores' inventory (read-only for other stores). Managers filter by store_id when provided.
-    const effectiveStoreId = user.role === UserRole.STORE_WORKER ? undefined : (storeId ?? undefined);
-    return this.inventoryService.findAll(effectiveStoreId, lowStock === 'true', search?.trim() || undefined);
+    return this.inventoryService.findAll(storeId ?? undefined, lowStock === 'true', search?.trim() || undefined);
   }
 
   @Get('low-stock')
