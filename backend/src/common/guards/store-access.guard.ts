@@ -20,10 +20,6 @@ export class StoreAccessGuard implements CanActivate {
       if (requestedStoreId && requestedStoreId !== user.storeId) {
         throw new ForbiddenException('Access denied to other stores');
       }
-      if (!requestedStoreId && request.method === 'GET') {
-        request.query = request.query || {};
-        request.query.store_id = user.storeId;
-      }
       return true;
     }
     return false;
