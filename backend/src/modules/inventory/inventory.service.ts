@@ -38,8 +38,9 @@ export class InventoryService {
       const tokens = search.trim().split(/\s+/);
       tokens.forEach((token, i) => {
         const param = `tok${i}`;
+        const dimClause = /x/i.test(token) ? ` OR d.displayName ILIKE :${param}` : '';
         qb.andWhere(
-          `(p.name ILIKE :${param} OR p.sku ILIKE :${param} OR v.variant_sku ILIKE :${param} OR s.name ILIKE :${param} OR s.code ILIKE :${param} OR c.name ILIKE :${param} OR c.colorCode ILIKE :${param} OR cat.name ILIKE :${param})`,
+          `(p.name ILIKE :${param} OR p.sku ILIKE :${param} OR s.name ILIKE :${param} OR s.code ILIKE :${param} OR c.name ILIKE :${param} OR c.colorCode ILIKE :${param} OR cat.name ILIKE :${param}${dimClause})`,
           { [param]: `%${token}%` },
         );
       });
