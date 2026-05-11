@@ -206,9 +206,9 @@ export default function Sales() {
           <Form.Item
             name="quantity"
             label="Количина"
-            rules={[{ required: true, message: 'Внеси количина' }, { type: 'number', min: 1, message: 'Минимум 1' }]}
+            rules={[{ required: true, message: 'Внеси количина' }, { type: 'number', min: 0.01, message: 'Минимум 0.01' }]}
           >
-            <InputNumber min={1} style={{ width: '100%' }} placeholder="пр. 1" />
+            <InputNumber min={0.01} step={0.1} precision={2} style={{ width: '100%' }} placeholder="пр. 1" />
           </Form.Item>
           <Form.Item name="notes" label="Забелешка (незадолжително)">
             <Input placeholder="пр. Клиент: Марко" />
